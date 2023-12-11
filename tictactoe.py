@@ -1,26 +1,33 @@
 import pygame # 1. pygame 선언
 pygame.init() # 2. pygame 초기화
+
 # 3. pygame에 사용되는 전역변수 선언
-WHITE = (255,255,255)
-BLACK = (0, 0, 0)
-YELLOW = (255, 255, 0)
-RED = (255, 0, 0)
-large_font = pygame.font.SysFont(None, 72)
-small_font = pygame.font.SysFont(None, 36)
-size = [600,600]
-screen = pygame.display.set_mode(size)
-turn = 0 
+WHITE = (255,255,255) 
+BLACK = (0, 0, 0) #화면 색
+YELLOW = (255, 255, 0) #X도형 색
+RED = (255, 0, 0)#게임 종료 폰트 색
+
+large_font = pygame.font.SysFont(None, 72) #종료 메시지 폰트와 크기
+small_font = pygame.font.SysFont(None, 36) #OX 도형 표시 폰트와 크기
+size = [600,600] #화면 크기
+screen = pygame.display.set_mode(size) 
+turn = 0 #게임 순서(턴) 을 확인할 변수-(0=X)(1=O)
+
 grid = [' ', ' ', ' ', 
         ' ', ' ', ' ', 
-        ' ', ' ', ' ']
-done = False
+        ' ', ' ', ' '] #3곱하기3내부 게임판 
+
+done = False #
 clock = pygame.time.Clock()
+
 def is_valid_position(grid, position):
     if grid[position] == ' ':
         return True
     else:
         return False
-def is_winner(grid, mark):
+
+#이겼는지 확인하는 함수 이겼으면 true, 아직 아니면 Fulse 리턴함
+def is_winner(grid, mark): 
     if (grid[0] == mark and grid[1] == mark and grid[2] == mark) or \
         (grid[3] == mark and grid[4] == mark and grid[5] == mark) or \
         (grid[6] == mark and grid[7] == mark and grid[8] == mark) or \
@@ -32,6 +39,7 @@ def is_winner(grid, mark):
         return True
     else:
         return False
+#모든 칸이 다 찼는지 확인합니다
 def is_grid_full(grid):
     full = True
     for mark in grid:
@@ -40,21 +48,25 @@ def is_grid_full(grid):
             break
     return full
 turn = 0 
+
 def runGame():
     #게임 활용 변수
-    CELL_SIZE = 60
-    COLUMN_COUNT = 3
-    ROW_COUNT = 3
+    CELL_SIZE = 60#셀 사이즈
+    COLUMN_COUNT = 3#세로수 #이거 고치면 OX 그리는 함수에서 오류남 시발 이럴거면 왜 만들어놓은거임?
+    ROW_COUNT = 3#가로수
+    #게임 종료시 가능성
     X_WIN = 1
     O_WIN = 2
     DRAW = 3
     game_over = 0
+#글로벌 변수 done-긑났는가? turn몇번째 턴인가? grid-뭐지
     global done, turn, grid
-    while not done:
+    while not done: #끝나지 않았을때까지 반복
         clock.tick(30)
         screen.fill(BLACK)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        
+        for event in pygame.event.get():#이 for문 안에서 if문을 읽음
+            if event.type == pygame.QUIT: #이벤트-종료시 done을 ture로
                 done=True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if turn == 0:
@@ -89,11 +101,12 @@ def runGame():
                             #break
                         turn += 1
                         turn = turn % 2
-            #화면 그리기
+            #화면 그리기(를 왜여따가 처넣음? 이새끼 입력 한번 받을때마다 맵 다시 쳐 그리고 있네?)
             for column_index in range(COLUMN_COUNT):
                 for row_index in range(ROW_COUNT):
                     rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
                     pygame.draw.rect(screen, WHITE, rect, 1)
+            #도형 찍는 함수 입력한번 들어올 때마다 모든 칸 확인하고 모두 채워넣음 ...( 는 또 왜 여따넣음???)
             for column_index in range(COLUMN_COUNT):
                 for row_index in range(ROW_COUNT):
                     position = column_index + 3 * row_index
@@ -104,6 +117,7 @@ def runGame():
                     elif mark == 'O':
                         O_image = small_font.render('{}'.format('O'), True, WHITE)
                         screen.blit(O_image, (CELL_SIZE * column_index + 10, CELL_SIZE * row_index + 10)) 
+            #결과 출력 안끝났으면 다시 이벤트 받기
             if not game_over: 
                 pass
             else:
