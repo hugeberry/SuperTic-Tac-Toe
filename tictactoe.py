@@ -65,6 +65,12 @@ def runGame():
         clock.tick(30)
         screen.fill(BLACK)
         
+        #화면 그리는 함수
+        for column_index in range(COLUMN_COUNT):
+                for row_index in range(ROW_COUNT):
+                    rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
+                    pygame.draw.rect(screen, WHITE, rect, 1)
+        
         for event in pygame.event.get():#이 for문 안에서 if문을 읽음
             if event.type == pygame.QUIT: #이벤트-종료시 done을 ture로
                 done=True
@@ -75,6 +81,8 @@ def runGame():
                     position = column_index + 3 * row_index
                     if is_valid_position(grid, position):
                         grid[position] = 'X'
+                        X_image = small_font.render('{}'.format('X'), True, YELLOW)
+                        screen.blit(X_image, (CELL_SIZE * column_index + 10, CELL_SIZE * row_index + 10)) 
                         if is_winner(grid, 'X'):
                             print('X 가 이겼습니다.')
                             game_over = X_WIN 
@@ -90,7 +98,9 @@ def runGame():
                     row_index = event.pos[1] // CELL_SIZE
                     position = column_index + 3 * row_index
                     if is_valid_position(grid, position):
-                        grid[position] = 'O'   
+                        grid[position] = 'O'
+                        O_image = small_font.render('{}'.format('O'), True, WHITE)
+                        screen.blit(O_image, (CELL_SIZE * column_index + 10, CELL_SIZE * row_index + 10)) 
                         if is_winner(grid, 'O'):
                             print('O 가 이겼습니다.')
                             game_over = O_WIN 
@@ -101,11 +111,7 @@ def runGame():
                             #break
                         turn += 1
                         turn = turn % 2
-            #화면 그리기(를 왜여따가 처넣음? 이새끼 입력 한번 받을때마다 맵 다시 쳐 그리고 있네?)
-            for column_index in range(COLUMN_COUNT):
-                for row_index in range(ROW_COUNT):
-                    rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
-                    pygame.draw.rect(screen, WHITE, rect, 1)
+
             #도형 찍는 함수 입력한번 들어올 때마다 모든 칸 확인하고 모두 채워넣음 ...( 는 또 왜 여따넣음???)
             for column_index in range(COLUMN_COUNT):
                 for row_index in range(ROW_COUNT):
