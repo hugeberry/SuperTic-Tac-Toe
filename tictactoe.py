@@ -66,6 +66,7 @@ def runGame():
         screen.fill(BLACK)
         
         #화면 그리는 함수
+
         for column_index in range(COLUMN_COUNT):
                 for row_index in range(ROW_COUNT):
                     rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
@@ -81,8 +82,6 @@ def runGame():
                     position = column_index + 3 * row_index
                     if is_valid_position(grid, position):
                         grid[position] = 'X'
-                        X_image = small_font.render('{}'.format('X'), True, YELLOW)
-                        screen.blit(X_image, (CELL_SIZE * column_index + 10, CELL_SIZE * row_index + 10)) 
                         if is_winner(grid, 'X'):
                             print('X 가 이겼습니다.')
                             game_over = X_WIN 
@@ -98,9 +97,7 @@ def runGame():
                     row_index = event.pos[1] // CELL_SIZE
                     position = column_index + 3 * row_index
                     if is_valid_position(grid, position):
-                        grid[position] = 'O'
-                        O_image = small_font.render('{}'.format('O'), True, WHITE)
-                        screen.blit(O_image, (CELL_SIZE * column_index + 10, CELL_SIZE * row_index + 10)) 
+                        grid[position] = 'O'   
                         if is_winner(grid, 'O'):
                             print('O 가 이겼습니다.')
                             game_over = O_WIN 
@@ -111,7 +108,6 @@ def runGame():
                             #break
                         turn += 1
                         turn = turn % 2
-
             #도형 찍는 함수 입력한번 들어올 때마다 모든 칸 확인하고 모두 채워넣음 ...( 는 또 왜 여따넣음???)
             for column_index in range(COLUMN_COUNT):
                 for row_index in range(ROW_COUNT):
