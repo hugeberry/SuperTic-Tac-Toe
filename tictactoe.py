@@ -15,6 +15,12 @@ grid = [' ', ' ', ' ',
         ' ', ' ', ' ']
 done = False
 clock = pygame.time.Clock()
+
+#게임 활용 변수
+CELL_SIZE = 60
+COLUMN_COUNT = 3
+ROW_COUNT = 3
+
 def is_valid_position(grid, position):
     if grid[position] == ' ':
         return True
@@ -32,6 +38,8 @@ def is_winner(grid, mark):
         return True
     else:
         return False
+
+
 def is_grid_full(grid):
     full = True
     for mark in grid:
@@ -39,12 +47,16 @@ def is_grid_full(grid):
             full = False 
             break
     return full
+
+def postoindex(pos):
+    column_index = pos[0] // 60
+    row_index = pos[1] // 60
+    position = column_index + 3 * row_index
+    return position
+
 turn = 0 
+
 def runGame():
-    #게임 활용 변수
-    CELL_SIZE = 60
-    COLUMN_COUNT = 3
-    ROW_COUNT = 3
     X_WIN = 1
     O_WIN = 2
     DRAW = 3
@@ -58,9 +70,7 @@ def runGame():
                 done=True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if turn == 0:
-                    column_index = event.pos[0] // CELL_SIZE
-                    row_index = event.pos[1] // CELL_SIZE
-                    position = column_index + 3 * row_index
+                    position=postoindex(event.pos)
                     if is_valid_position(grid, position):
                         grid[position] = 'X'
                         if is_winner(grid, 'X'):
@@ -74,9 +84,7 @@ def runGame():
                         turn += 1
                         turn = turn % 2
                 else:       
-                    column_index = event.pos[0] // CELL_SIZE
-                    row_index = event.pos[1] // CELL_SIZE
-                    position = column_index + 3 * row_index
+                    position=postoindex(event.pos)
                     if is_valid_position(grid, position):
                         grid[position] = 'O'   
                         if is_winner(grid, 'O'):
@@ -94,6 +102,7 @@ def runGame():
                 for row_index in range(ROW_COUNT):
                     rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
                     pygame.draw.rect(screen, WHITE, rect, 1)
+
             for column_index in range(COLUMN_COUNT):
                 for row_index in range(ROW_COUNT):
                     position = column_index + 3 * row_index
@@ -103,7 +112,8 @@ def runGame():
                         screen.blit(X_image, (CELL_SIZE * column_index + 10, CELL_SIZE * row_index + 10)) 
                     elif mark == 'O':
                         O_image = small_font.render('{}'.format('O'), True, WHITE)
-                        screen.blit(O_image, (CELL_SIZE * column_index + 10, CELL_SIZE * row_index + 10)) 
+                        screen.blit(O_image, (CELL_SIZE * column_index + 10, CELL_SIZE * row_index + 10))
+
             if not game_over: 
                 pass
             else:
