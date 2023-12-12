@@ -59,6 +59,16 @@ def runGame():
     O_WIN = 2
     DRAW = 3
     game_over = 0
+
+    Sp_CELL_SIZE = 180#셀 사이즈
+    Sp_COLUMN_COUNT = 3#세로수 #이거 고치면 OX 그리는 함수에서 오류남 시발 이럴거면 왜 만들어놓은거임?
+    Sp_ROW_COUNT = 3#가로수
+    #게임 종료시 가능성
+    Sp_X_WIN = 1
+    Sp_O_WIN = 2
+    Sp_S0DRAW = 3
+    Sp_game_over = 0
+
 #글로벌 변수 done-긑났는가? turn몇번째 턴인가? grid-뭐지
     global done, turn, grid
     while not done: #끝나지 않았을때까지 반복
@@ -66,11 +76,19 @@ def runGame():
         screen.fill(BLACK)
         
         #화면 그리는 함수
+<<<<<<< HEAD
 
         for column_index in range(COLUMN_COUNT):
                 for row_index in range(ROW_COUNT):
+=======
+        for column_index in range(COLUMN_COUNT*3):
+                for row_index in range(ROW_COUNT*3):
+>>>>>>> 80507236c760effe3ee0a72e05a892e24ecba7af
                     rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
-                    pygame.draw.rect(screen, WHITE, rect, 1)
+                    if column_index<=2 and row_index<=2:
+                        pygame.draw.rect(screen, YELLOW, rect, 1)
+                    else:
+                        pygame.draw.rect(screen, WHITE, rect, 1)
         
         for event in pygame.event.get():#이 for문 안에서 if문을 읽음
             if event.type == pygame.QUIT: #이벤트-종료시 done을 ture로
