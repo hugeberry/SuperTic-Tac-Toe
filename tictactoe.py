@@ -13,9 +13,11 @@ size = [600,600] #화면 크기
 screen = pygame.display.set_mode(size) 
 turn = 0 #게임 순서(턴) 을 확인할 변수-(0=X)(1=O)
 
-grid = [' ', ' ', ' ', 
-        ' ', ' ', ' ', 
-        ' ', ' ', ' '] #3곱하기3내부 게임판 
+grid = [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '] #3곱하기3내부 게임판 
+
+Sp_grid =[[' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '], [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '], [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '], 
+          [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '], [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '], [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '], 
+          [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '], [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' '], [' ', ' ', ' ',' ', ' ', ' ',' ', ' ', ' ']]
 
 done = False #
 clock = pygame.time.Clock()
@@ -59,6 +61,7 @@ def runGame():
     O_WIN = 2
     DRAW = 3
     game_over = 0
+    turn=0
 
     Sp_CELL_SIZE = 180#셀 사이즈
     Sp_COLUMN_COUNT = 3#세로수 #이거 고치면 OX 그리는 함수에서 오류남 시발 이럴거면 왜 만들어놓은거임?
@@ -70,22 +73,18 @@ def runGame():
     Sp_game_over = 0
 
 #글로벌 변수 done-긑났는가? turn몇번째 턴인가? grid-뭐지
-    global done, turn, grid
+    global done, grid
     while not done: #끝나지 않았을때까지 반복
         clock.tick(30)
         screen.fill(BLACK)
         
         #화면 그리는 함수
-<<<<<<< HEAD
-
-        for column_index in range(COLUMN_COUNT):
-                for row_index in range(ROW_COUNT):
-=======
         for column_index in range(COLUMN_COUNT*3):
                 for row_index in range(ROW_COUNT*3):
->>>>>>> 80507236c760effe3ee0a72e05a892e24ecba7af
                     rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
-                    if column_index<=2 and row_index<=2:
+                    if (column_index<=2 and (row_index<=2 or 6<=row_index)) or\
+                        (column_index>=6 and (row_index<=2 or 6<=row_index)) or\
+                        ((column_index<=5 and 3<=column_index) and (row_index<=5 and 3<=row_index)):
                         pygame.draw.rect(screen, YELLOW, rect, 1)
                     else:
                         pygame.draw.rect(screen, WHITE, rect, 1)
@@ -98,8 +97,12 @@ def runGame():
                     column_index = event.pos[0] // CELL_SIZE
                     row_index = event.pos[1] // CELL_SIZE
                     position = column_index + 3 * row_index
-                    if is_valid_position(grid, position):
-                        grid[position] = 'X'
+                    Sp_column_index = event.pos[0] // Sp_CELL_SIZE
+                    Sp_row_index = event.pos[1] // Sp_CELL_SIZE
+                    Sp_position = Sp_column_index + 3 * Sp_row_index
+                    
+                    if is_valid_position(Sp_grid[Sp_position], position):
+                        Sp_grid[Sp_position][position] = 'X'
                         if is_winner(grid, 'X'):
                             print('X 가 이겼습니다.')
                             game_over = X_WIN 
@@ -114,8 +117,12 @@ def runGame():
                     column_index = event.pos[0] // CELL_SIZE
                     row_index = event.pos[1] // CELL_SIZE
                     position = column_index + 3 * row_index
-                    if is_valid_position(grid, position):
-                        grid[position] = 'O'   
+                    Sp_column_index = event.pos[0] // Sp_CELL_SIZE
+                    Sp_row_index = event.pos[1] // Sp_CELL_SIZE
+                    Sp_position = Sp_column_index + 3 * Sp_row_index
+
+                    if is_valid_position(Sp_grid[Sp_position], position):
+                        Sp_grid[Sp_position] = 'O'   
                         if is_winner(grid, 'O'):
                             print('O 가 이겼습니다.')
                             game_over = O_WIN 
