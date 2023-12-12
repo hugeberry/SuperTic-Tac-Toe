@@ -25,7 +25,7 @@ Sp_grid = [[0 for j in range(P_X)] for i in range(P_Y)]
 
 done = False
 clock = pygame.time.Clock()
-#0-null x o 3-xwin 4-owin
+#0-null x o / 3-xwin 4-owin Sp_mark
 #작은 판 이기면 그 칸을 3으로 바꾼다
 def is_valid_position(grid, position):
     if grid[position] == 0:
@@ -54,15 +54,15 @@ def is_grid_full(grid):
             break
     return full
 
-def is_Sp_end(grid): #오류
-    if  (grid[0][0] == 3 and grid[1][0] == 3 and grid[2][0] == 3) or \
-        (grid[3][0] == 3 and grid[4][0] == 3 and grid[5][0] == 3) or \
-        (grid[6][0] == 3 and grid[7][0] == 3 and grid[8][0] == 3) or \
-        (grid[0][0] == 3 and grid[3][0] == 3 and grid[6][0] == 3) or \
-        (grid[1][0] == 3 and grid[4][0] == 3 and grid[7][0] == 3) or \
-        (grid[2][0] == 3 and grid[5][0] == 3 and grid[8][0] == 3) or \
-        (grid[0][0] == 3 and grid[4][0] == 3 and grid[8][0] == 3) or \
-        (grid[2][0] == 3 and grid[4][0] == 3 and grid[6][0] == 3):
+def is_Sp_win(grid,Sp_mark): 
+    if  (grid[0][0] == Sp_mark and grid[1][0] == Sp_mark and grid[2][0] == Sp_mark) or \
+        (grid[3][0] == Sp_mark and grid[4][0] == Sp_mark and grid[5][0] == Sp_mark) or \
+        (grid[6][0] == Sp_mark and grid[7][0] == Sp_mark and grid[8][0] == Sp_mark) or \
+        (grid[0][0] == Sp_mark and grid[3][0] == Sp_mark and grid[6][0] == Sp_mark) or \
+        (grid[1][0] == Sp_mark and grid[4][0] == Sp_mark and grid[7][0] == Sp_mark) or \
+        (grid[2][0] == Sp_mark and grid[5][0] == Sp_mark and grid[8][0] == Sp_mark) or \
+        (grid[0][0] == Sp_mark and grid[4][0] == Sp_mark and grid[8][0] == Sp_mark) or \
+        (grid[2][0] == Sp_mark and grid[4][0] == Sp_mark and grid[6][0] == Sp_mark):
         return True
     else:
         return False
@@ -118,7 +118,22 @@ def runGame():
                             print('무승부 입니다.')
                             game_over = DRAW 
                             #break
-
+                        turn = 2
+                if turn == 2:
+                    if is_valid_position(Sp_grid[Sp_index], index):
+                        Sp_grid[Sp_index][index] = 'O'
+                        print('넣음')
+                        print([Sp_index,index],)
+                        print(Sp_grid[Sp_index])
+                        if is_winner(Sp_grid[Sp_index], 'O'):
+                            print('O 가 이겼습니다.')
+                            game_over = X_WIN 
+                            #break
+                        elif is_grid_full(Sp_grid[Sp_index]):
+                            print('무승부 입니다.')
+                            game_over = DRAW 
+                            #break
+                        turn = 1
             pygame.display.update()
 
 runGame()
