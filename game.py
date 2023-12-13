@@ -25,8 +25,7 @@ Sp_grid = [[0 for j in range(P_X)] for i in range(P_Y)]
 V_grid = [0 for j in range(P_X)]
 done = False
 clock = pygame.time.Clock()
-#0-null x o / 3-xwin 4-owin Sp_mark
-#작은 판 이기면 그 칸을 3으로 바꾼다
+
 def is_valid_position(grid, position):
     if grid[position] == 0:
         return True
@@ -90,6 +89,15 @@ def map_make():
         for row_index in range(Sp_ROW_COUNT):
             rect = (Sp_CELL_SIZE * column_index, Sp_CELL_SIZE * row_index, Sp_CELL_SIZE, Sp_CELL_SIZE)
             pygame.draw.rect(screen,YELLOW, rect, 1)
+def OX_draw(Sp_grid):
+    for Sp_index in range(9):
+        for index, mark in enumerate(Sp_grid[Sp_index]):
+            if mark == 'X':
+                X_image = small_font.render('{}'.format('X'), True, YELLOW)
+                screen.blit(X_image, (Sp_index %3 * 180 + index % 3 *60 +15,Sp_index //3 * 180 + index // 3 *60 +15)) 
+            elif mark == 'O':
+                O_image = small_font.render('{}'.format('O'), True, WHITE)
+                screen.blit(O_image, (Sp_index %3 * 180 + index % 3 *60 +15,Sp_index //3 * 180 + index // 3 *60 +15))
 
 valid_index = 9 #이에 따라 가능한 Sp_index 하이라이트 하는 기능 추가 안됨
 def runGame():
@@ -150,14 +158,7 @@ def runGame():
                         valid_index = index
                         if not(V_grid[index]==0):
                             valid_index = 9
-            for Sp_index in range(9):
-                for index, mark in enumerate(Sp_grid[Sp_index]):
-                    if mark == 'X':
-                        X_image = small_font.render('{}'.format('X'), True, YELLOW)
-                        screen.blit(X_image, (Sp_index %3 * 180 + index % 3 *60 +15,Sp_index //3 * 180 + index // 3 *60 +15)) 
-                    elif mark == 'O':
-                        O_image = small_font.render('{}'.format('O'), True, WHITE)
-                        screen.blit(O_image, (Sp_index %3 * 180 + index % 3 *60 +15,Sp_index //3 * 180 + index // 3 *60 +15))
+            OX_draw(Sp_grid)
 
 
             pygame.display.update()
