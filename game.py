@@ -134,6 +134,16 @@ def runGame():
                             game_over = DRAW 
                             #break
                         turn = 1
+            for Sp_index in range(9):
+                for index, mark in enumerate(Sp_grid[Sp_index]):
+                    if mark == 'X':
+                        X_image = small_font.render('{}'.format('X'), True, YELLOW)
+                        screen.blit(X_image, (Sp_index %3 * 180 + index % 3 *60 +15,Sp_index //3 * 180 + index // 3 *60 +15)) 
+                    elif mark == 'O':
+                        O_image = small_font.render('{}'.format('O'), True, WHITE)
+                        screen.blit(O_image, (Sp_index %3 * 180 + index % 3 *60 +15,Sp_index //3 * 180 + index // 3 *60 +15))
+
+
             pygame.display.update()
 
 runGame()
