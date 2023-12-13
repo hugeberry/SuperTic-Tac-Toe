@@ -22,7 +22,7 @@ turn = 1
 P_X = 9
 P_Y = 9
 Sp_grid = [[0 for j in range(P_X)] for i in range(P_Y)]
-
+V_grid = [0 for j in range(P_X)]
 done = False
 clock = pygame.time.Clock()
 #0-null x o / 3-xwin 4-owin Sp_mark
@@ -81,37 +81,44 @@ def postoindex(pos):
     index = column_index + 3 * row_index
     return index
 
+def map_make():
+    for column_index in range(COLUMN_COUNT):
+        for row_index in range(ROW_COUNT):
+            rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
+            pygame.draw.rect(screen, WHITE, rect, 1)
+    for column_index in range(Sp_COLUMN_COUNT):
+        for row_index in range(Sp_ROW_COUNT):
+            rect = (Sp_CELL_SIZE * column_index, Sp_CELL_SIZE * row_index, Sp_CELL_SIZE, Sp_CELL_SIZE)
+            pygame.draw.rect(screen,YELLOW, rect, 1)
+
+valid_index = 9 #이에 따라 가능한 Sp_index 하이라이트 하는 기능 추가 안됨
 def runGame():
     X_WIN = 1
     O_WIN = 2
     DRAW = 3
     game_over = 0
-    global done, turn, Sp_grid
+    global done, turn, Sp_grid, valid_index
     while not done:
         clock.tick(30)
         screen.fill(BLACK)
         for event in pygame.event.get():
-            for column_index in range(COLUMN_COUNT):
-                for row_index in range(ROW_COUNT):
-                    rect = (CELL_SIZE * column_index, CELL_SIZE * row_index, CELL_SIZE, CELL_SIZE)
-                    pygame.draw.rect(screen, WHITE, rect, 1)
-            for column_index in range(Sp_COLUMN_COUNT):
-                for row_index in range(Sp_ROW_COUNT):
-                    rect = (Sp_CELL_SIZE * column_index, Sp_CELL_SIZE * row_index, Sp_CELL_SIZE, Sp_CELL_SIZE)
-                    pygame.draw.rect(screen,YELLOW, rect, 1)
+            map_make()     
             if event.type == pygame.QUIT:
                 done=True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 index=postoindex(event.pos)
                 Sp_index=Sp_postoindex(event.pos)
                 if turn == 1:
-                    if is_valid_position(Sp_grid[Sp_index], index):
+                    if is_valid_position(Sp_grid[Sp_index], index) and (valid_index == 9 or valid_index==Sp_index):
                         Sp_grid[Sp_index][index] = 'X'
                         print('넣음')
                         print([Sp_index,index],)
                         print(Sp_grid[Sp_index])
                         if is_winner(Sp_grid[Sp_index], 'X'):
                             print('X 가 이겼습니다.')
+                            V_grid[Sp_index] = 'X'
+                            if is_winner(V_grid,'X'):
+                                print('X의 최종우승')
                             game_over = X_WIN 
                             #break
                         elif is_grid_full(Sp_grid[Sp_index]):
@@ -119,14 +126,20 @@ def runGame():
                             game_over = DRAW 
                             #break
                         turn = 2
+                        valid_index = index
+                        if not(V_grid[index]==0):
+                            valid_index = 9
                 if turn == 2:
-                    if is_valid_position(Sp_grid[Sp_index], index):
+                    if is_valid_position(Sp_grid[Sp_index], index) and (valid_index == 9 or valid_index==Sp_index):
                         Sp_grid[Sp_index][index] = 'O'
                         print('넣음')
                         print([Sp_index,index],)
                         print(Sp_grid[Sp_index])
                         if is_winner(Sp_grid[Sp_index], 'O'):
                             print('O 가 이겼습니다.')
+                            V_grid[Sp_index] = 'Y'
+                            if is_winner(V_grid,'Y'):
+                                print('Y의 최종우승')
                             game_over = X_WIN 
                             #break
                         elif is_grid_full(Sp_grid[Sp_index]):
@@ -134,6 +147,9 @@ def runGame():
                             game_over = DRAW 
                             #break
                         turn = 1
+                        valid_index = index
+                        if not(V_grid[index]==0):
+                            valid_index = 9
             for Sp_index in range(9):
                 for index, mark in enumerate(Sp_grid[Sp_index]):
                     if mark == 'X':
