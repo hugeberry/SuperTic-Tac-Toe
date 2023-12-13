@@ -22,7 +22,8 @@ turn = 1
 P_X = 9
 P_Y = 9
 Sp_grid = [[0 for j in range(P_X)] for i in range(P_Y)]
-V_grid = [0 for j in range(P_X)]
+V_grid = [0 for j in range(P_X+1)]
+V_grid[9]='Y'
 done = False
 clock = pygame.time.Clock()
 
@@ -99,13 +100,17 @@ def OX_draw(Sp_grid):
                 O_image = small_font.render('{}'.format('O'), True, WHITE)
                 screen.blit(O_image, (Sp_index %3 * 180 + index % 3 *60 +15,Sp_index //3 * 180 + index // 3 *60 +15))
 
-valid_index = 9 #이에 따라 가능한 Sp_index 하이라이트 하는 기능 추가 안됨
+def Sp_valid(index,Sp_index,pre_index):
+    if (V_grid[Sp_index] == 0)and\
+        (Sp_grid[Sp_index][index] == 0) and\
+        (pre_index == Sp_index or V_grid[pre_index]!=0):
+        return True
+    else:
+        return False
+
+pre_index = 9
 def runGame():
-    X_WIN = 1
-    O_WIN = 2
-    DRAW = 3
-    game_over = 0
-    global done, turn, Sp_grid, valid_index
+    global done, turn, Sp_grid, pre_index
     while not done:
         clock.tick(30)
         screen.fill(BLACK)
@@ -117,9 +122,8 @@ def runGame():
                 index=postoindex(event.pos)
                 Sp_index=Sp_postoindex(event.pos)
                 if turn == 1:
-                    if is_valid_position(Sp_grid[Sp_index], index) and (valid_index == 9 or valid_index==Sp_index):
+                    if Sp_valid(index,Sp_index,pre_index):
                         Sp_grid[Sp_index][index] = 'X'
-                        print('넣음')
                         print([Sp_index,index],)
                         print(Sp_grid[Sp_index])
                         if is_winner(Sp_grid[Sp_index], 'X'):
@@ -127,20 +131,15 @@ def runGame():
                             V_grid[Sp_index] = 'X'
                             if is_winner(V_grid,'X'):
                                 print('X의 최종우승')
-                            game_over = X_WIN 
                             #break
                         elif is_grid_full(Sp_grid[Sp_index]):
                             print('무승부 입니다.')
-                            game_over = DRAW 
                             #break
                         turn = 2
-                        valid_index = index
-                        if not(V_grid[index]==0):
-                            valid_index = 9
+                        pre_index=index
                 if turn == 2:
-                    if is_valid_position(Sp_grid[Sp_index], index) and (valid_index == 9 or valid_index==Sp_index):
+                    if Sp_valid(index,Sp_index,pre_index):
                         Sp_grid[Sp_index][index] = 'O'
-                        print('넣음')
                         print([Sp_index,index],)
                         print(Sp_grid[Sp_index])
                         if is_winner(Sp_grid[Sp_index], 'O'):
@@ -148,16 +147,12 @@ def runGame():
                             V_grid[Sp_index] = 'Y'
                             if is_winner(V_grid,'Y'):
                                 print('Y의 최종우승')
-                            game_over = X_WIN 
                             #break
                         elif is_grid_full(Sp_grid[Sp_index]):
                             print('무승부 입니다.')
-                            game_over = DRAW 
                             #break
                         turn = 1
-                        valid_index = index
-                        if not(V_grid[index]==0):
-                            valid_index = 9
+                        pre_index=index
             OX_draw(Sp_grid)
 
 
